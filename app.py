@@ -13,6 +13,7 @@ def bezier_curve(t, A, B, C):
     )
 
 
+@st.cache_data
 def generate_points_around_line(a, b, c, num_points, max_distance):
     points = []
     for _ in range(num_points):
@@ -36,6 +37,11 @@ def generate_points_around_line(a, b, c, num_points, max_distance):
 def main():
     st.title("Interactive Bezier Curve")
 
+    # Add KDE sliders
+    st.sidebar.markdown("## KDE Parameters")
+    kernel = st.sidebar.selectbox("Kernel", options=["gau", "cos", "biw", "epa", "tri", "triw"])
+    bandwidth = st.sidebar.slider("Bandwidth", min_value=0.1, max_value=2.0, value=0.5, step=0.1)
+
     # Add sliders for A, B, C
     st.sidebar.markdown("## Control Points Coordinates")
     a_x = st.sidebar.slider("A X-coordinate", min_value=0.0, max_value=10.0, value=0.0)
@@ -47,16 +53,10 @@ def main():
     c_x = st.sidebar.slider("C X-coordinate", min_value=0.0, max_value=10.0, value=3.0)
     c_y = st.sidebar.slider("C Y-coordinate", min_value=0.0, max_value=10.0, value=8.0)
 
-    # Add KDE sliders
-    st.sidebar.markdown("## KDE Parameters")
-    kernel = st.sidebar.selectbox("Kernel", options=["gau", "cos", "biw", "epa", "tri", "triw"])
-    bandwidth = st.sidebar.slider("Bandwidth", min_value=0.1, max_value=2.0, value=0.5, step=0.1)
-
-
     # Add sliders for number of points and max distance
     st.sidebar.markdown("## Other Parameters")
     num_points = st.sidebar.slider("Number of Points", min_value=10, max_value=500, value=100)
-    max_dist = st.sidebar.slider("Maximum Distance", min_value=0.1, max_value=5.0, value=2.0)
+    max_dist = st.sidebar.slider("Maximum Distance", min_value=0.05, max_value=2.0, value=1.0)
 
     a = (a_x, a_y)
     b = (b_x, b_y)
@@ -67,7 +67,7 @@ def main():
     x_coords = [point[0] for point in points]
     y_coords = [point[1] for point in points]
 
-    fig, ax = plt.subplots(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=(10, 10))
 
     ax.scatter(x_coords, y_coords, c="blue", marker="o", label="Generated Points")
     t_values = np.linspace(0, 1, 100)
