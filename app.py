@@ -3,7 +3,6 @@ import math
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.neighbors import KernelDensity
 
 
@@ -36,7 +35,7 @@ def generate_points_around_line(a, b, c, num_points, max_distance):
 
 
 def main():
-    st.title("Interactive Bezier Curve")
+    st.title("Interactive KDE with Distribution around Bezier Curve")
 
     # Add KDE sliders
     st.sidebar.markdown("## KDE Parameters")
@@ -111,14 +110,13 @@ def main():
         y_bezier,
         color="red",
         linewidth=2,
-        label="Bent Line Segment",
+        label="Bezier Curve",
         zorder=3,
     )
 
     ax.legend()
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
-    ax.set_title("Points Around Bent Line Segment")
     ax.grid(True)
 
     # Display the plot
